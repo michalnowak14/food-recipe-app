@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import styles from "./fooddetail.module.css";
+import ItemList from "./ItemList";
 
 export default function FoodDetail({ foodID }) {
-  const [food, setFood] = useState(null); // Start with null instead of undefined for clarity
+  const [food, setFood] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const URL = `https://api.spoonacular.com/recipes/${foodID}/information`;
   const API_KEY = "d7c866828db242e68cd1985e84f86cdf";
@@ -22,7 +23,6 @@ export default function FoodDetail({ foodID }) {
     fetchFoodDetail();
   }, [foodID]);
 
-  // Conditional rendering to wait for `food` data to be loaded
   if (!food) {
     return <p>Loading...</p>;
   }
@@ -46,13 +46,17 @@ export default function FoodDetail({ foodID }) {
           <span> {food.vegan ? "Vegan" : ""}</span>
         </div>
         <div className={styles.recipeInstructions}>
-          <h2>Instructions</h2>
+          <h2>Ingredients</h2>
+          <ItemList food={food} />
+          <h2 className={styles.instructions}>Instructions</h2>
           {isLoading ? (
             <p>Loading...</p>
           ) : (
             <ol>
               {food.analyzedInstructions?.[0]?.steps?.map((step, index) => (
-                <li key={index}>{step.step}</li>
+                <li className={styles.instructionsStep} key={index}>
+                  {step.step}
+                </li>
               ))}
             </ol>
           )}
